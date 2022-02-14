@@ -4,7 +4,7 @@ export default function CheckoutPage() {
     
     return (
         <Typography variant='h3'>
-            Only Logged in users should be able to see this!
+           You did it! You are logged in!
         </Typography>
     )
 }

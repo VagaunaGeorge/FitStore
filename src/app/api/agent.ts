@@ -2,13 +2,20 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { history } from '../..';
 import { PaginatedResponse } from '../models/pagination';
+import { store } from '../store/configureStore';
 
-const sleep = () => new Promise(resolve =>setTimeout(resolve,500));
+const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
 axios.defaults.baseURL = 'http://localhost:5000/api/';
 axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;
+
+axios.interceptors.request.use(config => {
+    const token = store.getState().account.user?.token;
+    if (token) config.headers!.Authorization = `Bearer ${token}`;
+    return config;
+})
 
 axios.interceptors.response.use(async response => {
     await sleep();
@@ -26,11 +33,11 @@ axios.interceptors.response.use(async response => {
                 const modelStateErrors: string[] = [];
                 for (const key in data.errors) {
                     if (data.errors[key]) {
-                         modelStateErrors.push(data.errors[key])
-                     }
+                        modelStateErrors.push(data.errors[key])
+                    }
                 }
                 throw modelStateErrors.flat();
-             }
+            }
             toast.error(data.title)
             break;
         case 401:
@@ -49,24 +56,24 @@ axios.interceptors.response.use(async response => {
 })
 
 const requests = {
-    get: (url: string, params?:URLSearchParams) => axios.get(url,{params}).then(responseBody),
-    post: (url: string, body:{}) => axios.post(url, body).then(responseBody),
-    put: (url: string, body:{}) => axios.put(url, body).then(responseBody),
+    get: (url: string, params?: URLSearchParams) => axios.get(url, { params }).then(responseBody),
+    post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
+    put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
 }
 
 const Catalog = {
-    list: (params:URLSearchParams) => requests.get('products',params),
+    list: (params: URLSearchParams) => requests.get('products', params),
     details: (id: number) => requests.get(`products/${id}`),
-    fetchFilter: () =>requests.get('products/filters')
+    fetchFilter: () => requests.get('products/filters')
 }
 
-const TestErrors = { 
-    get400Error: ()=> requests.get('buggy/bad-request'),
+const TestErrors = {
+    get400Error: () => requests.get('buggy/bad-request'),
     get401Error: () => requests.get('buggy/unauthorized'),
-    get404Error: ()=> requests.get('buggy/not-found'),
-    get500Error: ()=> requests.get('buggy/server-error'),
-    getValidationError: ()=> requests.get('buggy/validation-error'),
+    get404Error: () => requests.get('buggy/not-found'),
+    get500Error: () => requests.get('buggy/server-error'),
+    getValidationError: () => requests.get('buggy/validation-error'),
 }
 
 const Basket = {
