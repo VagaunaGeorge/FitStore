@@ -9,6 +9,7 @@ import BasketSummary from './BasketSummary';
 
 export default function BasketPage() {
     const { basket, status } = useAppSelector(state => state.basket);
+    const { user } = useAppSelector(state => state.account);
     const dispatch = useAppDispatch();
 
 
@@ -42,9 +43,9 @@ export default function BasketPage() {
                                 <TableCell align="right">${(item.price / 100).toFixed(2)}</TableCell>
                                 <TableCell align="center">
                                     <LoadingButton
-                                        loading={status === 'pendingRemoveItem' + item.productId+'rem'}
+                                        loading={status === 'pendingRemoveItem' + item.productId + 'rem'}
                                         color='error'
-                                        onClick={() => dispatch(removeBasketItemAsync({ productId: item.productId, quantity: 1, name:'rem' }))}>
+                                        onClick={() => dispatch(removeBasketItemAsync({ productId: item.productId, quantity: 1, name: 'rem' }))}>
                                         <Remove />
                                     </LoadingButton>
                                     {item.quantity}
@@ -59,9 +60,9 @@ export default function BasketPage() {
                                 <TableCell align="right">${((item.price * item.quantity) / 100).toFixed(2)}</TableCell>
                                 <TableCell align="right">
                                     <LoadingButton
-                                        loading={status === 'pendingRemoveItem' + item.productId+'del'}
+                                        loading={status === 'pendingRemoveItem' + item.productId + 'del'}
                                         color='error'
-                                        onClick={() => dispatch(removeBasketItemAsync({ productId: item.productId, quantity: item.quantity, name:'del' }))}>
+                                        onClick={() => dispatch(removeBasketItemAsync({ productId: item.productId, quantity: item.quantity, name: 'del' }))}>
                                         <Delete />
                                     </LoadingButton>
                                 </TableCell>
