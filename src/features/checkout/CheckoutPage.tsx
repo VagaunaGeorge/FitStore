@@ -183,9 +183,7 @@ export default function CheckoutPage() {
               </Typography>
               {paymentSucceeded ? (
                 <Typography variant="subtitle1">
-                  Your order number is #{orderNumber}. We have not emailed your
-                  order confirmation, and will not send you an update when your
-                  order has shipped as this is a fake store!
+                  Thank you for the order! Your order number is #{orderNumber}. 
                 </Typography>
               ) : (
                 <Button variant="contained" onClick={handleBack}>

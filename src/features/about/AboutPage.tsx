@@ -1,58 +1,68 @@
-import { Alert, AlertTitle, Button, ButtonGroup, Container, List, ListItem, ListItemText, Typography } from '@mui/material';
-import { useState } from 'react';
-import agent from '../../app/api/agent';
+import React from 'react';
+import { Typography, Card, CardContent, Grid } from '@mui/material';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-export default function AboutPage() {
+const containerStyle = {
+  width: '100%',
+  height: '400px',
+};
 
-    const [validationErrors, setValidationErrors] = useState<string[]>([]);
+const center = {
+    lat: 45.031428,
+    lng: 23.268939
+  };
+  
 
-    function getValidationError() {
-        agent.TestErrors.getValidationError()
-            .then(() => console.log('should not see this'))
-            .catch(error =>setValidationErrors(error))
-    }
+const AboutPage: React.FC = () => {
+  return (
+    <div>
+      <Grid container justifyContent="center" alignItems="center">
+        <Grid item>
+          <Typography gutterBottom variant="h4">
+            About us
+          </Typography>
+        </Grid>
+      </Grid>
+      <Card>
+        <CardContent>
+          <Typography variant="body1" gutterBottom>
+            We are an online e-commerce store specializing in winter sports equipment. Whether you're into skiing,
+            snowboarding, we've got you covered with a wide range of high-quality gear and
+            accessories.
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Visit our store or give us a call to learn more about our products and services.
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Contact Information
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                Phone: (+40) 761157357
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                Email: georgevagauna@student.upt.ro
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                Address: Gorj, Targu-Jiu, street Unirii  nr.20
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Location
+              </Typography>
+              <LoadScript googleMapsApiKey="AIzaSyAPd95urArb_15eKwWOh4R8wS8nmbJ1l8Q">
+                <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={12}>
+                  <Marker position={center} />
+                </GoogleMap>
+              </LoadScript>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
-    return (
-        <Container>
-            <Typography gutterBottom variant='h3'>
-                Errors for testing purposes
-            </Typography>
-            <ButtonGroup fullWidth>
-                <Button variant='contained'
-                    onClick={() => agent.TestErrors.get400Error().catch(error => console.log(error))}>
-                        Test 400 Error
-                </Button>
-                <Button variant='contained'
-                    onClick={() => agent.TestErrors.get401Error().catch(error => console.log(error))}>
-                        Test 401 Error
-                </Button>
-                <Button variant='contained'
-                    onClick={() => agent.TestErrors.get404Error().catch(error => console.log(error))}>
-                        Test 404 Error
-                </Button>
-                <Button variant='contained'
-                    onClick={() => agent.TestErrors.get500Error().catch(error => console.log(error))}>
-                        Test 500 Error
-                </Button>
-                <Button variant='contained'
-                    onClick={getValidationError}>
-                        Test Validation Error
-                </Button>
-            </ButtonGroup>
-            {validationErrors.length > 0 &&
-                <Alert severity='error'>
-                    <AlertTitle>
-                        Validation Errors
-                    </AlertTitle>
-                    <List>
-                        {validationErrors.map(error => (
-                            <ListItem key={error}>
-                                <ListItemText>{error}</ListItemText>
-                            </ListItem>
-                        ))}
-                    </List>
-                </Alert>
-            }
-        </Container>
-    )
-}
+export default AboutPage;
